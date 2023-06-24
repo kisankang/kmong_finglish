@@ -13,8 +13,37 @@ class HomePage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+      appBar: CustomAppBar(automaticallyImplyLeading: true),
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 150),
+              TextButton.icon(
+                onPressed: () => controller.onTapDrawerItem(0),
+                icon: const Icon(Icons.home),
+                label: const Text('home'),
+              ),
+              TextButton.icon(
+                onPressed: () => controller.onTapDrawerItem(1),
+                icon: const Icon(Icons.check_box),
+                label: const Text('word'),
+              ),
+              TextButton.icon(
+                onPressed: () => controller.onTapDrawerItem(2),
+                icon: const Icon(Icons.checklist),
+                label: const Text('sentence'),
+              ),
+              TextButton.icon(
+                onPressed: () => controller.onTapDrawerItem(3),
+                icon: const Icon(Icons.person),
+                label: const Text('my'),
+              ),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

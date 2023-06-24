@@ -1,4 +1,5 @@
 import 'package:finglish/data/services/user_data_service.dart';
+import 'package:finglish/modules/main/main_controller.dart';
 import 'package:finglish/routes/app_pages.dart';
 import 'package:finglish/utils/enums.dart';
 import 'package:get/get.dart';
@@ -35,5 +36,11 @@ class HomeController extends GetxController {
 
   goToQuizPage(QuizStartType quizStartType) {
     Get.toNamed(Routes.QUIZ, arguments: quizStartType);
+  }
+
+  onTapDrawerItem(int index) {
+    Get.back();
+    MainController mainController = Get.find();
+    mainController.onTapBottomNavigationBarItem(index);
   }
 }
