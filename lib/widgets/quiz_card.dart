@@ -26,54 +26,6 @@ class QuizCard extends StatelessWidget {
     required bool isQuiz,
     double fontSize = 28,
   }) {
-    // textBuilder(String text, {Color? color}) => WidgetSpan(
-    //       alignment: PlaceholderAlignment.top,
-    //       child: Padding(
-    //         padding: const EdgeInsets.only(right: 10),
-    //         child: Text(
-    //           text,
-    //           textAlign: TextAlign.center,
-    //           style: TextStyle(
-    //             fontSize: fontSize,
-    //             fontWeight: FontWeight.bold,
-    //             color: color,
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    // blankBuilder(
-    //   String text, {
-    //   required TextEditingController blankEditingController,
-    // }) =>
-    //     WidgetSpan(
-    //       alignment: PlaceholderAlignment.top,
-    //       child: Padding(
-    //         padding: const EdgeInsets.only(right: 10),
-    //         child: SizedBox(
-    //           width: 0.8 * fontSize * text.length,
-    //           child: TextFormField(
-    //             controller: blankEditingController,
-    //             validator: (value) {
-    //               if (value == '') {
-    //                 return '정답을 입력해주세요';
-    //               }
-    //               return null;
-    //             },
-    //             style: TextStyle(
-    //               fontSize: fontSize,
-    //               fontWeight: FontWeight.bold,
-    //             ),
-    //             textAlign: TextAlign.center,
-    //             decoration: const InputDecoration(
-    //                 isDense: true,
-    //                 contentPadding: EdgeInsets.all(0),
-    //                 border: OutlineInputBorder(),
-    //                 errorStyle: TextStyle(fontSize: 8)),
-    //           ),
-    //         ),
-    //       ),
-    //     );
-
     List<WidgetSpan> spans = List.generate(textList.length, (index) {
       String text = textList[index];
       if (highightList[index]) {
