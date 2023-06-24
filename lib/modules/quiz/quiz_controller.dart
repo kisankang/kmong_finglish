@@ -88,6 +88,7 @@ class QuizController extends GetxController {
         break;
     }
     if (quizDatas.isNotEmpty) {
+      quizDatas.shuffle();
       setBlankControllers();
     } else {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
