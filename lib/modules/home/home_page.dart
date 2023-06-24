@@ -31,7 +31,17 @@ class HomePage extends GetWidget<HomeController> {
                   const SizedBox(height: 20),
                   _renderTodayStatus(),
                   const SizedBox(height: 20),
-                  _renderStartButton(),
+                  _renderStartButton(
+                    title: '오늘의 단어 시작',
+                    onTap: () =>
+                        controller.goToQuizPage(QuizStartType.todayWord),
+                  ),
+                  const SizedBox(height: 10),
+                  _renderStartButton(
+                    title: '오늘의 문장 시작',
+                    onTap: () =>
+                        controller.goToQuizPage(QuizStartType.todaySentence),
+                  ),
                   const SizedBox(height: 10),
                 ],
               ),
@@ -110,14 +120,17 @@ class HomePage extends GetWidget<HomeController> {
     );
   }
 
-  ElevatedButton _renderStartButton() {
+  ElevatedButton _renderStartButton({
+    required String title,
+    required Function()? onTap,
+  }) {
     return ElevatedButton(
       style: AppStyle.roundElevatedButton,
-      onPressed: () => controller.goToQuizPage(QuizStartType.today),
+      onPressed: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
         child: Text(
-          '공부 시작하기',
+          title,
           style: TextStyle(fontSize: Get.textTheme.headlineSmall?.fontSize)
               .copyWith(fontWeight: FontWeight.bold),
         ),
