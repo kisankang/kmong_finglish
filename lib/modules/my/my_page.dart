@@ -141,7 +141,7 @@ class MyPage extends GetWidget<MyController> {
             if (isOpened)
               QuizResultCard(
                 quizResultDatas: quizResultDatas,
-                height: 200,
+                height: Get.size.height * 0.6,
               ),
             ElevatedButton(
               onPressed: onTapReview,
