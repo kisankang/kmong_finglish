@@ -1,6 +1,7 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/models/quiz_result.dart';
 import 'package:finglish/data/services/quiz_data_service.dart';
+import 'package:finglish/data/services/quiz_play_service.dart';
 import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/routes/app_pages.dart';
 import 'package:finglish/utils/enums.dart';
@@ -12,12 +13,15 @@ import 'package:get/get.dart';
 class QuizController extends GetxController {
   final QuizDataService _quizDataService;
   final UserDataService _userDataService;
+  final QuizPlayService _quizPlayService;
 
   QuizController({
     required QuizDataService quizDataService,
     required UserDataService userDataService,
+    required QuizPlayService quizPlayService,
   })  : _quizDataService = quizDataService,
-        _userDataService = userDataService;
+        _userDataService = userDataService,
+        _quizPlayService = quizPlayService;
 
   Rx<int> selecteIndex = 0.obs;
   Quiz get currentQuiz => quizDatas[selecteIndex.value];

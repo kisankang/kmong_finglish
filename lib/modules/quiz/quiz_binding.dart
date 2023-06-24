@@ -7,6 +7,7 @@ class QuizBinding implements Bindings {
     Get.lazyPut(() => QuizController(
           quizDataService: Get.find(),
           userDataService: Get.find(),
+          quizPlayService: Get.find(),
         ));
   }
 }

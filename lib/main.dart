@@ -1,4 +1,5 @@
 import 'package:finglish/data/repositories/quiz_repository.dart';
+import 'package:finglish/data/services/quiz_play_service.dart';
 import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/data/services/quiz_data_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,11 +19,7 @@ Future<void> main() async {
   Get.put<QuizRepository>(QuizRepository(), permanent: true);
   Get.put<QuizDataService>(QuizDataService(), permanent: true);
   Get.put<UserDataService>(UserDataService(), permanent: true);
-
-  // QuizDataService quizDataService = Get.find<QuizDataService>();
-  // UserDataService userDataService = Get.find<UserDataService>();
-  // quizDataService.init();
-  // userDataService.init();
+  Get.put<QuizPlayService>(QuizPlayService(), permanent: true);
 
   var getMaterialApp = GetMaterialApp(
     debugShowCheckedModeBanner: false,
