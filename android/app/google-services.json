@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "834795353106",
+    "project_id": "finglish-60196",
+    "storage_bucket": "finglish-60196.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834795353106:android:97394bbba919c0fef294cb",
+        "android_client_info": {
+          "package_name": "finglish.com.finglish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834795353106-qdib4b4ic430t911bi2nh2gm69rfv4no.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPZVdjO0hlsoriWNAdTgkIczgk8fGbzCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834795353106-qdib4b4ic430t911bi2nh2gm69rfv4no.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
