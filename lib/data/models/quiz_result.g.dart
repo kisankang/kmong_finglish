@@ -8,11 +8,16 @@ part of 'quiz_result.dart';
 
 QuizResult _$QuizResultFromJson(Map<String, dynamic> json) => QuizResult(
       quiz: Quiz.fromJson(json['quiz'] as Map<String, dynamic>),
-      triedTime: (json['triedTime'] as List<dynamic>)
-          .map((e) => DateTime.parse(e as String))
-          .toList(),
-      myAnswer: (json['myAnswer'] as List<dynamic>)
-          .map((e) => (e as List<dynamic>).map((e) => e as String?).toList())
+      triedResult: (json['triedResult'] as List<dynamic>)
+          .map((e) => _$recordConvert(
+                e,
+                ($jsonValue) => (
+                  isCorrect: $jsonValue['isCorrect'] as bool,
+                  isCorrectAnswerOn: $jsonValue['isCorrectAnswerOn'] as bool,
+                  isHintOn: $jsonValue['isHintOn'] as bool,
+                  triedTime: DateTime.parse($jsonValue['triedTime'] as String),
+                ),
+              ))
           .toList(),
       isLiked: json['isLiked'] as bool,
     );
@@ -20,7 +25,19 @@ QuizResult _$QuizResultFromJson(Map<String, dynamic> json) => QuizResult(
 Map<String, dynamic> _$QuizResultToJson(QuizResult instance) =>
     <String, dynamic>{
       'quiz': instance.quiz.toJson(),
-      'triedTime': instance.triedTime.map((e) => e.toIso8601String()).toList(),
-      'myAnswer': instance.myAnswer,
       'isLiked': instance.isLiked,
+      'triedResult': instance.triedResult
+          .map((e) => {
+                'isCorrect': e.isCorrect,
+                'isCorrectAnswerOn': e.isCorrectAnswerOn,
+                'isHintOn': e.isHintOn,
+                'triedTime': e.triedTime.toIso8601String(),
+              })
+          .toList(),
     };
+
+$Rec _$recordConvert<$Rec>(
+  Object? value,
+  $Rec Function(Map) convert,
+) =>
+    convert(value as Map<String, dynamic>);

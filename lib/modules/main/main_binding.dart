@@ -9,8 +9,8 @@ class MainBinding implements Bindings {
   void dependencies() {
     Get.lazyPut(() => HomeController(userDataService: Get.find()));
     Get.lazyPut(() => QuizController(
-          quizDataService: Get.find(),
-          userDataService: Get.find(),
+          // quizDataService: Get.find(),
+          // userDataService: Get.find(),
           quizPlayService: Get.find(),
         ));
     Get.lazyPut(() => MyController(localAppUserDataService: Get.find()));

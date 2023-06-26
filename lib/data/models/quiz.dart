@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-
 part 'quiz.g.dart';
 
 @JsonSerializable()
 class Quiz {
   int quizId; // createdAt
+  int? lastUpdatedAt;
   QuizType type;
   List<String> title;
   List<bool> titleHighLight;
@@ -15,6 +15,7 @@ class Quiz {
 
   Quiz({
     required this.quizId,
+    this.lastUpdatedAt,
     required this.type,
     required this.title,
     required this.titleHighLight,

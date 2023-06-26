@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class WidgetSpanBuilder {
   static WidgetSpan textBuilder({
@@ -26,17 +27,28 @@ class WidgetSpanBuilder {
     required String text,
     required TextEditingController blankEditingController,
     required double fontSize,
+    required bool isLastBlank,
+    required Function()? correctCallback,
   }) {
-    double blankWidth = 0.8 * fontSize * text.length;
+    getWidth(int textLength) => 0.8 * fontSize * textLength;
+    double blankWidth = getWidth(text.length);
+    bool isCorrect = false;
     return WidgetSpan(
       alignment: PlaceholderAlignment.top,
       child: Padding(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(top: 5, bottom: 5, right: 10),
         child: StatefulBuilder(
           builder: (context, setState) {
             return SizedBox(
               width: blankWidth,
               child: TextFormField(
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: isCorrect ? Colors.blue : null,
+                  fontWeight: FontWeight.bold,
+                ),
+                textInputAction:
+                    isLastBlank ? TextInputAction.done : TextInputAction.next,
                 controller: blankEditingController,
                 validator: (value) {
                   if (value == '') {
@@ -46,15 +58,22 @@ class WidgetSpanBuilder {
                 },
                 onChanged: (value) {
                   if (value.length >= text.length) {
-                    setState(() {
-                      blankWidth = 0.8 * fontSize * value.length;
-                    });
+                    blankWidth = getWidth(value.length);
                   }
+                  if (text.toLowerCase() ==
+                      blankEditingController.text.toLowerCase()) {
+                    isCorrect = true;
+                    isLastBlank
+                        ? Get.focusScope?.unfocus()
+                        : Get.focusScope?.nextFocus();
+                    if (correctCallback != null) {
+                      correctCallback();
+                    }
+                  } else {
+                    isCorrect = false;
+                  }
+                  setState(() {});
                 },
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
                 textAlign: TextAlign.center,
                 decoration: const InputDecoration(
                     isDense: true,

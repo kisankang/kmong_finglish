@@ -11,89 +11,97 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class QuizController extends GetxController {
-  final QuizDataService _quizDataService;
-  final UserDataService _userDataService;
-  final QuizPlayService _quizPlayService;
+  // final QuizDataService _quizDataService;
+  // final UserDataService _userDataService;
+  final QuizPlayService quizPlayService;
 
   QuizController({
-    required QuizDataService quizDataService,
-    required UserDataService userDataService,
-    required QuizPlayService quizPlayService,
-  })  : _quizDataService = quizDataService,
-        _userDataService = userDataService,
-        _quizPlayService = quizPlayService;
+    // required QuizDataService quizDataService,
+    // required UserDataService userDataService,
+    required this.quizPlayService,
+  });
+  // _quizDataService = quizDataService,
+  //       _userDataService = userDataService,
 
-  Rx<int> selecteIndex = 0.obs;
-  Quiz get currentQuiz => quizDatas[selecteIndex.value];
-  late List<Quiz> quizDatas;
-  late QuizStartType quizStartType;
-  List<TextEditingController?> blankControllerList = [];
-  setBlankControllers() {
-    List<TextEditingController?> _blankControllerList = [];
+  int get quizResultIndex => quizResultData
+      .indexWhere((element) => currentQuiz.quizId == element.quiz.quizId);
+
+  loadQuizCard() {
+    List<TextEditingController?> blankControllers = [];
     for (var element in currentQuiz.enHighlight) {
       element == true
-          ? _blankControllerList.add(TextEditingController())
-          : _blankControllerList.add(null);
+          ? blankControllers.add(TextEditingController())
+          : blankControllers.add(null);
     }
-    blankControllerList = _blankControllerList;
-    int findQuizResult = quizResultDatas.indexWhere((element) =>
-        quizDatas[selecteIndex.value].quizId == element.quiz.quizId);
-    if (findQuizResult != -1) {
-      QuizResult triedQuiz = quizResultDatas[findQuizResult];
-      for (var i = 0; i < triedQuiz.myAnswer.last.length; i++) {
-        if (triedQuiz.myAnswer.last[i] != null) {
-          blankControllerList[i]?.text = triedQuiz.myAnswer.last[i]!;
+    quizPlayService.blankControllerList = blankControllers;
+    if (quizResultIndex != -1) {
+      QuizResult triedQuiz = quizResultData[quizResultIndex];
+      isCorrect.value = triedQuiz.triedResult.last.isCorrect;
+      isLiked.value = triedQuiz.isLiked;
+      isHintOn.value = triedQuiz.triedResult.last.isHintOn;
+      isCorrectAnswerOn.value = triedQuiz.triedResult.last.isCorrectAnswerOn;
+      for (var i = 0; i < triedQuiz.quiz.en.length; i++) {
+        if (triedQuiz.quiz.enHighlight[i]) {
+          quizPlayService.blankControllerList[i]?.text = triedQuiz.quiz.en[i];
         }
+      }
+    } else {
+      isCorrect.value = false;
+      isLiked.value = false;
+      isHintOn.value = false;
+      isCorrectAnswerOn.value = false;
+      if (quizStartType == QuizStartType.important ||
+          quizStartType == QuizStartType.importantWord ||
+          quizStartType == QuizStartType.importantSentence) {
+        isLiked.value = true;
       }
     }
   }
 
-  Rx<bool> isHintOn = false.obs;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<QuizResult> quizResultDatas = [];
+  Rx<int> get currentIndex => quizPlayService.getCurrentIndex(quizStartType);
+  bool get isFirst => quizPlayService.isFirst(quizStartType);
+  bool get isLast => quizPlayService.isLast(quizStartType);
+  late QuizStartType quizStartType;
+  List<Quiz> get quizData => quizPlayService.getQuizData(quizStartType);
+  Quiz get currentQuiz => quizPlayService.currentQuiz(quizStartType);
+  List<QuizResult> get quizResultData =>
+      quizPlayService.getQuizResultData(quizStartType);
+
+  // List<TextEditingController?> _quizPlayService.blankControllerList = [];
+  Rx<bool> isCorrect = false.obs;
   Rx<bool> isLiked = false.obs;
+  Rx<bool> isHintOn = false.obs;
+  Rx<bool> isCorrectAnswerOn = false.obs;
+
+  onTapSeeHint() {
+    isHintOn.value = true;
+    for (var i = 0; i < quizPlayService.blankControllerList.length; i++) {
+      if (quizPlayService.blankControllerList[i] != null) {
+        quizPlayService.blankControllerList[i]!.text =
+            currentQuiz.en[i].substring(0, 1);
+      }
+    }
+  }
+
+  onTapSeeCorrectAnswer() {
+    isHintOn.value = true;
+    isCorrectAnswerOn.value = true;
+    for (var i = 0; i < quizPlayService.blankControllerList.length; i++) {
+      if (quizPlayService.blankControllerList[i] != null) {
+        quizPlayService.blankControllerList[i]!.text = currentQuiz.en[i];
+      }
+    }
+    isCorrect.value = true;
+    updateQuizResult();
+  }
 
   @override
   void onInit() {
     super.onInit();
     quizStartType = Get.arguments;
-    switch (quizStartType) {
-      case QuizStartType.today:
-        quizDatas = _quizDataService.getTodayQuiz(QuizType.word) +
-            _quizDataService.getTodayQuiz(QuizType.sentence);
-        break;
-      case QuizStartType.todayWord:
-        quizDatas = _quizDataService.getTodayQuiz(QuizType.word);
-        break;
-      case QuizStartType.todaySentence:
-        quizDatas = _quizDataService.getTodayQuiz(QuizType.sentence);
-        break;
-      case QuizStartType.todayWrong:
-        quizDatas = _userDataService.todayWrongQuizResult.toQuizList();
-        break;
-      case QuizStartType.todayTried:
-        quizDatas = _userDataService.todayWordQuizResult.toQuizList() +
-            _userDataService.todaySentenceQuizResult.toQuizList();
-      case QuizStartType.todayTriedWord:
-        quizDatas = _userDataService.todayWordQuizResult.toQuizList();
-        break;
-      case QuizStartType.todayTriedSentence:
-        quizDatas = _userDataService.todaySentenceQuizResult.toQuizList();
-        break;
-      case QuizStartType.important:
-        quizDatas = _userDataService.importantWordQuizResult.toQuizList() +
-            _userDataService.importantSentenceResult.toQuizList();
-        break;
-      case QuizStartType.importantWord:
-        quizDatas = _userDataService.importantWordQuizResult.toQuizList();
-        break;
-      case QuizStartType.importantSentence:
-        quizDatas = _userDataService.importantSentenceResult.toQuizList();
-        break;
-    }
-    if (quizDatas.isNotEmpty) {
-      quizDatas.shuffle();
-      setBlankControllers();
+    quizPlayService.startQuiz(quizStartType);
+    if (quizData.isNotEmpty) {
+      loadQuizCard();
     } else {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         Get.back();
@@ -106,76 +114,63 @@ class QuizController extends GetxController {
     }
   }
 
-  QuizResult getQuizResult(Quiz quiz) {
-    List<String?> answer = [];
-    for (var i = 0; i < blankControllerList.length; i++) {
-      answer.add(blankControllerList[i]?.text);
+  updateQuizResult() {
+    if (quizResultIndex == -1) {
+      quizResultData.add(QuizResult(
+        quiz: currentQuiz,
+        triedResult: [
+          (
+            triedTime: DateTime.now(),
+            isCorrect: isCorrect.value,
+            isCorrectAnswerOn: isCorrectAnswerOn.value,
+            isHintOn: isHintOn.value
+          )
+        ],
+        isLiked: isLiked.value,
+      ));
     }
-    QuizResult quizResult = QuizResult(
-      quiz: quiz,
-      triedTime: [DateTime.now()],
-      myAnswer: [answer],
-      isLiked: isLiked.value,
-    );
-    return quizResult;
   }
 
-  bool get isFirst => selecteIndex.value == 0;
-
-  bool get isLast => selecteIndex.value == quizDatas.length - 1;
+  onTapLikeButton() {
+    isLiked.toggle();
+    if (quizResultIndex != -1) {
+      quizResultData[quizResultIndex].isLiked = isLiked.value;
+    }
+  }
 
   onTapBefore() {
-    selecteIndex.value = selecteIndex.value - 1;
-    int findQuizResult = quizResultDatas.indexWhere((element) =>
-        quizDatas[selecteIndex.value].quizId == element.quiz.quizId);
-    if (findQuizResult != -1) {
-      isLiked.value = quizResultDatas[findQuizResult].isLiked;
-    }
-    setBlankControllers();
-    isHintOn.value = false;
-  }
-
-  addQuizResult(Quiz quiz) {
-    int sameIndex = quizResultDatas
-        .indexWhere((element) => element.quiz.quizId == quiz.quizId);
-    if (sameIndex == -1) {
-      quizResultDatas.add(getQuizResult(quiz));
-    } else {
-      quizResultDatas[sameIndex] = getQuizResult(quiz);
-    }
+    quizPlayService.decreaseCurrentIndex(quizStartType);
+    loadQuizCard();
   }
 
   onTapNext() {
-    if (formKey.currentState!.validate()) {
-      addQuizResult(currentQuiz);
-      selecteIndex.value = selecteIndex.value + 1;
-      setBlankControllers();
-      isLiked.value = false;
-      isHintOn.value = false;
-    }
+    updateQuizResult();
+    quizPlayService.increaseCurrentIndex(quizStartType);
+    loadQuizCard();
   }
 
-  onTapSubmit() {
-    if (formKey.currentState!.validate()) {
-      addQuizResult(currentQuiz);
-      Get.offNamedUntil(Routes.MAIN, (route) => false);
-      for (var element in quizResultDatas) {
-        _userDataService.triedQuiz(element);
-      }
-      Get.dialog(
-        Center(
-            child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            QuizResultCard(quizResultDatas: quizResultDatas),
-            ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('확인'))
-          ],
-        )),
-      );
-    }
+  onTapComplete() {
+    updateQuizResult();
+    Get.offNamedUntil(Routes.MAIN, (route) => false);
+    Get.dialog(
+      Center(
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          QuizResultCard(quizResultDatas: quizResultData),
+          ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('확인'))
+        ],
+      )),
+    );
+    quizPlayService.completeQuiz(quizStartType);
+  }
+
+  quizCardCorrectCallback() {
+    isCorrect.value = true;
+    updateQuizResult();
   }
 }

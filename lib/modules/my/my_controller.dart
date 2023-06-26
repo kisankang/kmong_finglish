@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class MyController extends GetxController {
   UserDataService localAppUserDataService;
   MyController({required this.localAppUserDataService});
-  List<int> targetSettingList = [20, 30, 50, 100];
+  List<int> targetSettingList = [5, 20, 30, 50, 100];
 
   late Rx<int> targetWordNumber;
   late Rx<int> targetSentenceNumber;

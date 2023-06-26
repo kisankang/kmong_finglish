@@ -29,7 +29,8 @@ extension OrderQuizList on List<Quiz> {
 extension OrderQuizResultList on List<QuizResult> {
   /// Earlier comes first
   void orderByTriedTime() {
-    sort((a, b) => a.triedTime.first.compareTo(b.triedTime.first));
+    sort((a, b) =>
+        a.triedResult.first.triedTime.compareTo(b.triedResult.first.triedTime));
   }
 
   void sortBy(QuizType type) {

@@ -8,6 +8,7 @@ part of 'quiz.dart';
 
 Quiz _$QuizFromJson(Map<String, dynamic> json) => Quiz(
       quizId: json['quizId'] as int,
+      lastUpdatedAt: json['lastUpdatedAt'] as int?,
       type: $enumDecode(_$QuizTypeEnumMap, json['type']),
       title: (json['title'] as List<dynamic>).map((e) => e as String).toList(),
       titleHighLight: (json['titleHighLight'] as List<dynamic>)
@@ -23,6 +24,7 @@ Quiz _$QuizFromJson(Map<String, dynamic> json) => Quiz(
 
 Map<String, dynamic> _$QuizToJson(Quiz instance) => <String, dynamic>{
       'quizId': instance.quizId,
+      'lastUpdatedAt': instance.lastUpdatedAt,
       'type': _$QuizTypeEnumMap[instance.type]!,
       'title': instance.title,
       'titleHighLight': instance.titleHighLight,

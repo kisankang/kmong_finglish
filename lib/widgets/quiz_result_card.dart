@@ -45,9 +45,16 @@ class QuizResultCard extends StatelessWidget {
                         return ListTile(
                           leading: Text((index + 1).toString()),
                           title: Text.rich(TextSpan(children: list)),
-                          trailing: quizResultDatas[index].isCorrect.last
-                              ? const Icon(Icons.circle_outlined)
-                              : const Icon(Icons.close),
+                          trailing: quizResultDatas[index]
+                                      .triedResult
+                                      .last
+                                      .isCorrectAnswerOn ||
+                                  quizResultDatas[index]
+                                      .triedResult
+                                      .last
+                                      .isHintOn
+                              ? const Icon(Icons.check)
+                              : const Icon(Icons.circle_outlined),
                         );
                       },
                     ),

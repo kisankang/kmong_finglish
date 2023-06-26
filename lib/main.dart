@@ -19,7 +19,12 @@ Future<void> main() async {
   Get.put<QuizRepository>(QuizRepository(), permanent: true);
   Get.put<QuizDataService>(QuizDataService(), permanent: true);
   Get.put<UserDataService>(UserDataService(), permanent: true);
-  Get.put<QuizPlayService>(QuizPlayService(), permanent: true);
+  Get.put<QuizPlayService>(
+      QuizPlayService(
+        quizDataService: Get.find(),
+        userDataService: Get.find(),
+      ),
+      permanent: true);
 
   var getMaterialApp = GetMaterialApp(
     debugShowCheckedModeBanner: false,

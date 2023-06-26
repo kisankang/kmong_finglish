@@ -71,10 +71,10 @@ class UserDataService extends GetxService {
     }
     QuizResult lastTriedQuiz = wordQuizResultList.last;
 
-    DateTime lastDay = lastTriedQuiz.triedTime.first;
+    DateTime lastDay = lastTriedQuiz.triedResult.first.triedTime;
 
     for (var element in wordQuizResultList) {
-      DateTime triedTime = element.triedTime.first;
+      DateTime triedTime = element.triedResult.first.triedTime;
       if (!(lastDay.year == triedTime.year &&
           lastDay.month == triedTime.month &&
           lastDay.day == triedTime.day)) {
@@ -97,12 +97,16 @@ class UserDataService extends GetxService {
     if (listOnLastDay.isEmpty) {
       return targetNumber(type);
     }
-    DateTime lastDay = listOnLastDay.last.triedTime.last;
+    DateTime lastDay = listOnLastDay.last.triedResult.last.triedTime;
     DateTime now = DateTime.now();
     if (lastDay.year == now.year &&
         lastDay.month == now.month &&
         lastDay.day == now.day) {
-      result = targetNumber(type) - listOnLastDay.length;
+      if (targetNumber(type) > listOnLastDay.length) {
+        result = targetNumber(type) - listOnLastDay.length;
+      } else {
+        result = targetNumber(type);
+      }
     } else {
       result = targetNumber(type);
     }
@@ -142,7 +146,7 @@ class UserDataService extends GetxService {
   List<QuizResult> get todayQuizResult {
     List<QuizResult> result = [];
     for (var element in appUser.quizResult) {
-      DateTime lastTried = element.triedTime.last;
+      DateTime lastTried = element.triedResult.last.triedTime;
       DateTime today = DateTime.now();
       if (lastTried.year == today.year &&
           lastTried.month == today.month &&
@@ -176,7 +180,8 @@ class UserDataService extends GetxService {
   List<QuizResult> get todayWrongQuizResult {
     List<QuizResult> result = [];
     for (var element in todayQuizResult) {
-      if (element.isCorrect.first == false) {
+      if (element.triedResult.first.isCorrectAnswerOn ||
+          element.triedResult.first.isHintOn) {
         result.add(element);
       }
     }
