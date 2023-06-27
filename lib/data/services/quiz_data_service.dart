@@ -14,15 +14,33 @@ class QuizDataService extends GetxService {
     await init();
   }
 
+  Rx<bool> isReady = false.obs;
+
   Future<void> init() async {
     await GetStorage.init(GetStorageKey.QUIZ_CONTAINER);
+
     QuizRepository quizRepository = Get.find();
+
     List<Quiz> result = [];
     List<Quiz>? quiz = await quizRepository.getAllAfter(lastQuizId);
     result.addAll(quiz as Iterable<Quiz>);
     for (var element in result) {
       await writeQuizData(element);
     }
+    List<Quiz> resultForUpdatedQuiz = [];
+    List<Quiz>? updatedQuiz = await quizRepository.getAllUpdatedQuiz();
+    resultForUpdatedQuiz.addAll(updatedQuiz as Iterable<Quiz>);
+    for (var element in resultForUpdatedQuiz) {
+      await updateQuizData(element);
+    }
+    List<Quiz> resultForDeletedQuiz = [];
+    List<Quiz>? deletedQuiz = await quizRepository.getAllDeletededQuiz();
+    resultForDeletedQuiz.addAll(deletedQuiz as Iterable<Quiz>);
+    for (var element in resultForDeletedQuiz) {
+      await updateQuizData(element);
+    }
+
+    isReady.value = true;
   }
 
   GetStorage? _quizStorage;
@@ -50,11 +68,22 @@ class QuizDataService extends GetxService {
     }
   }
 
+  Future updateQuizData(Quiz quiz) async {
+    Iterable iterableKeys = quizStorage.getKeys();
+    List<String> keys = iterableKeys.toList() as List<String>;
+    if (keys.contains(quiz.quizId.toString())) {
+      await quizStorage.write(quiz.quizId.toString(), quiz.toJson());
+    }
+  }
+
   List<Quiz> readAll() {
     List<Quiz> result = [];
     Iterable list = quizStorage.getValues();
     for (var element in list) {
-      result.add(Quiz.fromJson(element));
+      Quiz quiz = Quiz.fromJson(element);
+      if (quiz.deletedAt == null) {
+        result.add(quiz);
+      }
     }
     return result;
   }

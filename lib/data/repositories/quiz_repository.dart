@@ -56,4 +56,57 @@ class QuizRepository extends GetxService {
     }
     return result;
   }
+
+  Future<List<Quiz>?> getAllUpdatedQuiz() async {
+    List<Quiz>? result;
+    try {
+      await quizCollection
+          .where('lastUpdatedAt', isNull: false)
+          .get()
+          .then((value) {
+        List<Quiz> quizs = [];
+        for (var i = 0; i < value.docs.length; i++) {
+          Map<String, dynamic> json =
+              value.docs[i].data() as Map<String, dynamic>;
+          quizs.add(Quiz.fromJson(json));
+        }
+        result = quizs;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return result;
+  }
+
+  Future<List<Quiz>?> getAllDeletededQuiz() async {
+    List<Quiz>? result;
+    try {
+      await quizCollection
+          .where('deletedAt', isNull: false)
+          .get()
+          .then((value) {
+        List<Quiz> quizs = [];
+        for (var i = 0; i < value.docs.length; i++) {
+          Map<String, dynamic> json =
+              value.docs[i].data() as Map<String, dynamic>;
+          quizs.add(Quiz.fromJson(json));
+        }
+        result = quizs;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return result;
+  }
+
+  Future<bool> updateQuiz(Quiz quiz) async {
+    bool result = false;
+    try {
+      await quizCollection.doc(quiz.quizId.toString()).update(quiz.toJson());
+      result = true;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return result;
+  }
 }

@@ -4,6 +4,7 @@ part 'quiz.g.dart';
 @JsonSerializable()
 class Quiz {
   int quizId; // createdAt
+  int? deletedAt;
   int? lastUpdatedAt;
   QuizType type;
   List<String> title;
@@ -15,6 +16,7 @@ class Quiz {
 
   Quiz({
     required this.quizId,
+    this.deletedAt,
     this.lastUpdatedAt,
     required this.type,
     required this.title,

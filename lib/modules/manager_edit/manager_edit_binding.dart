@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 class ManagerEditlBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ManagerEditController(quizRepository: Get.find()));
+    Get.lazyPut(() => ManagerEditController(
+          quizDataService: Get.find(),
+          quizRepository: Get.find(),
+        ));
   }
 }

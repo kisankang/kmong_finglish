@@ -29,6 +29,7 @@ class WidgetSpanBuilder {
     required double fontSize,
     required bool isLastBlank,
     required Function()? correctCallback,
+    required bool isDisabled,
   }) {
     getWidth(int textLength) => 0.8 * fontSize * textLength;
     double blankWidth = getWidth(text.length);
@@ -42,6 +43,7 @@ class WidgetSpanBuilder {
             return SizedBox(
               width: blankWidth,
               child: TextFormField(
+                readOnly: isDisabled,
                 style: TextStyle(
                   fontSize: fontSize,
                   color: isCorrect ? Colors.blue : null,

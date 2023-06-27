@@ -23,7 +23,9 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Visibility(
-                    visible: controller.pageIndex.value != 0,
+                    visible: controller.pageIndex.value != 0 &&
+                        !(controller.pageIndex.value == 1 &&
+                            controller.isEditMode != null),
                     child: OutlinedButton(
                       onPressed: controller.onTapBack,
                       child: const Text('뒤로'),
@@ -40,7 +42,11 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
                 ],
               ),
               const SizedBox(height: 20),
-              Expanded(child: _renderPage(controller.pageIndex.value)),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: _renderPage(controller.pageIndex.value),
+                ),
+              ),
             ],
           ),
         ),
@@ -117,20 +123,23 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text('퀴즈 타입'),
+          _renderSelectQuizType(),
+          const SizedBox(height: 15),
           const Text('제목, 주제, 핵심어구'),
           widgetSpans(
               list: controller.quiz.value.title,
               highlightList: controller.quiz.value.titleHighLight,
               onTap: controller.onTapTitleSpan,
               higlightColor: Colors.red),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           const Text('한국어'),
           widgetSpans(
               list: controller.quiz.value.kr,
               highlightList: controller.quiz.value.krHighlight,
               onTap: controller.onTapKrSpan,
               higlightColor: Colors.red),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           const Text('영어'),
           widgetSpans(
               list: controller.quiz.value.en,
@@ -148,28 +157,7 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          Obx(
-            () => SegmentedButton<QuizType>(
-              segments: <ButtonSegment<QuizType>>[
-                ButtonSegment<QuizType>(
-                  value: QuizType.word,
-                  label: Text(QuizType.word.text),
-                  // icon: Icon(Icons.calendar_view_day),
-                ),
-                ButtonSegment<QuizType>(
-                  value: QuizType.sentence,
-                  label: Text(QuizType.sentence.text),
-                  // icon: Icon(Icons.calendar_view_week),
-                ),
-              ],
-              selected: <QuizType>{controller.quiz.value.type},
-              onSelectionChanged: (Set<QuizType> newSelection) {
-                controller.quiz.update((val) {
-                  val?.type = newSelection.first;
-                });
-              },
-            ),
-          ),
+          _renderSelectQuizType(),
           const SizedBox(height: 10),
           TextFormField(
             controller: controller.titleEditingController,
@@ -198,6 +186,29 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Obx _renderSelectQuizType() {
+    return Obx(
+      () => SegmentedButton<QuizType>(
+        segments: <ButtonSegment<QuizType>>[
+          ButtonSegment<QuizType>(
+            value: QuizType.word,
+            label: Text(QuizType.word.text),
+          ),
+          ButtonSegment<QuizType>(
+            value: QuizType.sentence,
+            label: Text(QuizType.sentence.text),
+          ),
+        ],
+        selected: <QuizType>{controller.quiz.value.type},
+        onSelectionChanged: (Set<QuizType> newSelection) {
+          controller.quiz.update((val) {
+            val?.type = newSelection.first;
+          });
+        },
       ),
     );
   }

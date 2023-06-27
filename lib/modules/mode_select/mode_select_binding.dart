@@ -4,6 +4,6 @@ import 'package:get/get.dart';
 class ModeSelectBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ModeSelectController());
+    Get.lazyPut(() => ModeSelectController(quizDataService: Get.find()));
   }
 }

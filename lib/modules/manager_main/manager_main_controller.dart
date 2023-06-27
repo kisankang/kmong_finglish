@@ -89,7 +89,9 @@ class ManagerMainController extends GetxController {
     }
   }
 
-  onTapEdit() {}
+  onTapEdit() {
+    Get.toNamed(Routes.MANAGER_EDIT);
+  }
 
   onTapDeleteLocalData() {
     Get.dialog(

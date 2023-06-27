@@ -1,5 +1,6 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/repositories/quiz_repository.dart';
+import 'package:finglish/data/services/quiz_data_service.dart';
 import 'package:finglish/utils/app_reg_exp.dart';
 import 'package:finglish/utils/loading.dart';
 import 'package:flutter/material.dart';
@@ -7,25 +8,48 @@ import 'package:get/get.dart';
 
 class ManagerManualController extends GetxController {
   final QuizRepository _quizRepository;
-  ManagerManualController({required QuizRepository quizRepository})
-      : _quizRepository = quizRepository;
+  final QuizDataService _quizDataService;
+  ManagerManualController(
+      {required QuizRepository quizRepository,
+      required QuizDataService quizDataService})
+      : _quizRepository = quizRepository,
+        _quizDataService = quizDataService;
 
-  Rx<int> pageIndex = 0.obs;
-  final formKey = GlobalKey<FormState>();
+  Quiz? isEditMode;
 
-  Rx<Quiz> quiz = Rx(Quiz(
-    quizId: 0,
-    type: QuizType.word,
-    title: [],
-    titleHighLight: [],
-    kr: [],
-    krHighlight: [],
-    en: [],
-    enHighlight: [],
-  ));
-  TextEditingController titleEditingController = TextEditingController();
-  TextEditingController krEditingController = TextEditingController();
-  TextEditingController enEditingController = TextEditingController();
+  late Rx<int> pageIndex;
+  late GlobalKey<FormState> formKey;
+
+  late Rx<Quiz> quiz;
+  late TextEditingController titleEditingController;
+  late TextEditingController krEditingController;
+  late TextEditingController enEditingController;
+  @override
+  onInit() {
+    super.onInit();
+    isEditMode = Get.arguments;
+    if (isEditMode != null) {
+      pageIndex = 1.obs;
+      quiz = Rx(isEditMode!);
+    } else {
+      pageIndex = 0.obs;
+      quiz = Rx(Quiz(
+        quizId: 0,
+        type: QuizType.word,
+        title: [],
+        titleHighLight: [],
+        kr: [],
+        krHighlight: [],
+        en: [],
+        enHighlight: [],
+      ));
+    }
+    formKey = GlobalKey<FormState>();
+
+    titleEditingController = TextEditingController();
+    krEditingController = TextEditingController();
+    enEditingController = TextEditingController();
+  }
 
   titleValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -55,11 +79,12 @@ class ManagerManualController extends GetxController {
     if (pageIndex.value == 0) {
       if (formKey.currentState?.validate() == true) {
         _createQuestionData();
-      } else {
-        return;
       }
+    } else if (pageIndex.value == 1 && isEditMode != null) {
+      quiz.update((val) {
+        val?.lastUpdatedAt = DateTime.now().millisecondsSinceEpoch;
+      });
     }
-
     pageIndex.value++;
   }
 
@@ -99,11 +124,19 @@ class ManagerManualController extends GetxController {
 
   onTapSave() async {
     Loading.on();
-    if (await _quizRepository.createQuiz(quiz.value)) {
-      titleEditingController.clear();
-      krEditingController.clear();
-      enEditingController.clear();
-      pageIndex.value = 0;
+    if (isEditMode == null) {
+      if (await _quizRepository.createQuiz(quiz.value)) {
+        await _quizDataService.writeQuizData(quiz.value);
+        titleEditingController.clear();
+        krEditingController.clear();
+        enEditingController.clear();
+        pageIndex.value = 0;
+      }
+    } else {
+      if (await _quizRepository.updateQuiz(quiz.value)) {
+        await _quizDataService.updateQuizData(quiz.value);
+        Get.back(result: quiz.value);
+      }
     }
     Loading.off();
   }

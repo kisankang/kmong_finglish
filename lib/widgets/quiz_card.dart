@@ -78,6 +78,7 @@ class _QuizCardState extends State<QuizCard> {
       if (highightList[index]) {
         if (isQuiz) {
           return WidgetSpanBuilder.blankBuilder(
+            isDisabled: widget.blankControllerList == null,
             text: text,
             blankEditingController: putController(text, index),
             fontSize: fontSize,
