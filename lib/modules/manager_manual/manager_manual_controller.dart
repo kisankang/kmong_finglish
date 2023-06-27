@@ -1,15 +1,13 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/repositories/quiz_repository.dart';
-import 'package:finglish/data/services/quiz_data_service.dart';
-import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/utils/app_reg_exp.dart';
 import 'package:finglish/utils/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ManagerController extends GetxController {
-  QuizRepository _quizRepository;
-  ManagerController({required QuizRepository quizRepository})
+class ManagerManualController extends GetxController {
+  final QuizRepository _quizRepository;
+  ManagerManualController({required QuizRepository quizRepository})
       : _quizRepository = quizRepository;
 
   Rx<int> pageIndex = 0.obs;
@@ -108,12 +106,5 @@ class ManagerController extends GetxController {
       pageIndex.value = 0;
     }
     Loading.off();
-  }
-
-  eraseLocalData() async {
-    QuizDataService quiz = Get.find();
-    UserDataService user = Get.find();
-    await quiz.eraseAll();
-    await user.eraseAll();
   }
 }

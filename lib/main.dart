@@ -30,7 +30,7 @@ Future<void> main() async {
     debugShowCheckedModeBanner: false,
     theme: lightThemeData,
     getPages: AppPages.pages,
-    initialRoute: Routes.MODESELECT,
+    initialRoute: Routes.MODE_SELECT,
     initialBinding: BindingsBuilder(() {}),
     builder: EasyLoading.init(
       builder: (context, child) => child!,

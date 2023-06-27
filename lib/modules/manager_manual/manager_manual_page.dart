@@ -1,13 +1,11 @@
 import 'package:finglish/data/models/quiz.dart';
-import 'package:finglish/data/services/quiz_data_service.dart';
-import 'package:finglish/data/services/user_data_service.dart';
-import 'package:finglish/modules/manager/manager_controller.dart';
+import 'package:finglish/modules/manager_manual/manager_manual_controller.dart';
 import 'package:finglish/widgets/quiz_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ManagerPage extends GetWidget<ManagerController> {
-  const ManagerPage({super.key});
+class ManagerManualPage extends GetWidget<ManagerManualController> {
+  const ManagerManualPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,53 +13,7 @@ class ManagerPage extends GetWidget<ManagerController> {
       () => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('관리자 페이지'),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Get.dialog(
-                    Center(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('로컬 데이터(학습 내용)를 모두 삭제하시겠습니까?'),
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  OutlinedButton(
-                                    onPressed: () async {
-                                      Get.back();
-                                      controller.eraseLocalData();
-                                      UserDataService userDataService =
-                                          Get.find();
-                                      QuizDataService quizDataService =
-                                          Get.find();
-                                      await userDataService.init();
-                                      await quizDataService.init();
-                                    },
-                                    child: const Text('확인'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: const Text('취소'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.delete))
-          ],
+          title: const Text('매뉴얼 업로드'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),

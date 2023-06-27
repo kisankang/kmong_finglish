@@ -53,7 +53,7 @@ class ModeSelectPage extends GetWidget<ModeSelectController> {
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
                                     Get.back();
-                                    Get.toNamed(Routes.MANAGER);
+                                    Get.toNamed(Routes.MANAGER_MAIN);
                                   }
                                 },
                                 child: const Text('확인'),
