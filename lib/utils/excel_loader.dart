@@ -8,21 +8,23 @@ import 'package:get/get.dart';
 class ExcelHelper {
   static Future<Excel?> load() async {
     Excel? excel;
-    File? file;
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      file = File(result.files.single.path!);
-    } else {
-      // User canceled the picker
-    }
-    if (file != null) {
-      try {
+
+    try {
+      File? file;
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        file = File(result.files.single.path!);
+      } else {
+        // User canceled the picker
+      }
+      if (file != null) {
         var bytes = file.readAsBytesSync();
         excel = Excel.decodeBytes(bytes);
-      } catch (e) {
-        Get.showSnackbar(GetSnackBar(message: e.toString()));
       }
+    } catch (e) {
+      Get.showSnackbar(GetSnackBar(message: e.toString()));
     }
+
     return excel;
   }
 

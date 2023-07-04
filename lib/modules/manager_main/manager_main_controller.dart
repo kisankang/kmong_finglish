@@ -15,77 +15,94 @@ class ManagerMainController extends GetxController {
   }
 
   onTapExcelUpload() async {
-    Excel? excel = await ExcelHelper.load();
-    if (excel != null) {
-      List<Quiz> quizData = ExcelHelper.convertFromExcel(excel);
-      if (quizData.isEmpty) {
-        Get.dialog(
-          Center(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('퀴즈 데이터를 감지할 수 없습니다.'),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: const Text('확인'),
-                    ),
-                  ],
+    try {
+      Excel? excel = await ExcelHelper.load();
+      if (excel != null) {
+        List<Quiz> quizData = ExcelHelper.convertFromExcel(excel);
+        if (quizData.isEmpty) {
+          Get.dialog(
+            Center(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('퀴즈 데이터를 감지할 수 없습니다.'),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text('확인'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        } else {
+          Get.dialog(
+            Center(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                          '${quizData.length}개의 퀴즈 데이터가 감지되었습니다.\n업로드 하시겠습니까?'),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              Get.back();
+                            },
+                            child: const Text('취소'),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () async {
+                              Loading.onWithProgress();
+                              QuizRepository _quizRepository = Get.find();
+                              for (var i = 0; i < quizData.length; i++) {
+                                double done = i / quizData.length;
+                                Loading.updateProgress(done,
+                                    status: '$i / ${quizData.length}');
+                                await _quizRepository.createQuiz(quizData[i]);
+                              }
+                              Loading.off();
+                              Get.back();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
       } else {
-        Get.dialog(
-          Center(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('${quizData.length}개의 퀴즈 데이터가 감지되었습니다.\n업로드 하시겠습니까?'),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () async {
-                            Get.back();
-                          },
-                          child: const Text('취소'),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () async {
-                            Loading.onWithProgress();
-                            QuizRepository _quizRepository = Get.find();
-                            for (var i = 0; i < quizData.length; i++) {
-                              double done = i / quizData.length;
-                              Loading.updateProgress(done,
-                                  status: '$i / ${quizData.length}');
-                              await _quizRepository.createQuiz(quizData[i]);
-                            }
-                            Loading.off();
-                            Get.back();
-                          },
-                          child: const Text('확인'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+        Get.showSnackbar(
+          const GetSnackBar(
+            title: '오류',
+            message: '로드된 파일이 Null입니다',
           ),
         );
       }
+    } catch (e) {
+      Get.showSnackbar(
+        GetSnackBar(
+          title: '오류',
+          message: e.toString(),
+        ),
+      );
     }
   }
 
