@@ -6,6 +6,7 @@ import 'package:finglish/utils/enums.dart';
 import 'package:finglish/widgets/quiz_result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 
 class QuizController extends GetxController {
   // final QuizDataService _quizDataService;
@@ -93,8 +94,9 @@ class QuizController extends GetxController {
   }
 
   @override
-  void onInit() {
+  onInit() {
     super.onInit();
+    audioPlayer.setAsset('assets/good_sound.mp3');
     quizStartType = Get.arguments;
     quizPlayService.startQuiz(quizStartType);
     if (quizData.isNotEmpty) {
@@ -166,8 +168,11 @@ class QuizController extends GetxController {
     quizPlayService.completeQuiz(quizStartType);
   }
 
+  AudioPlayer audioPlayer = AudioPlayer();
+
   quizCardCorrectCallback() {
     isCorrect.value = true;
+    audioPlayer.play();
     updateQuizResult();
   }
 }
