@@ -22,6 +22,7 @@ class QuizPage extends GetWidget<QuizController> {
 
     return Obx(() {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(controller.quizStartType.text),
         ),
