@@ -31,8 +31,16 @@ class WidgetSpanBuilder {
     required Function()? correctCallback,
     required bool isDisabled,
   }) {
-    getWidth(int textLength) => 0.8 * fontSize * textLength;
-    double blankWidth = getWidth(text.length);
+    calWidth(String text) {
+      TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: TextStyle(fontSize: fontSize)),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      return textPainter.size.width + 20;
+    }
+
+    double blankWidth = calWidth(text);
+
     bool isCorrect = false;
     return WidgetSpan(
       alignment: PlaceholderAlignment.top,
@@ -59,8 +67,8 @@ class WidgetSpanBuilder {
                   return null;
                 },
                 onChanged: (value) {
-                  if (value.length >= text.length) {
-                    blankWidth = getWidth(value.length);
+                  if (calWidth(value) >= calWidth(text)) {
+                    blankWidth = calWidth(value);
                   }
                   if (text.toLowerCase() ==
                       blankEditingController.text.toLowerCase()) {
