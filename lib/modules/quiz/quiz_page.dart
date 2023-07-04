@@ -91,25 +91,21 @@ class QuizPage extends GetWidget<QuizController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (controller.isHintOn.value == false)
-            ElevatedButton(
-              onPressed: controller.onTapSeeHint,
-              child: const Column(
-                children: [
-                  Icon(Icons.visibility_outlined),
-                  Text('힌트'),
-                ],
-              ),
-            ),
-          const SizedBox(width: 10),
           if (controller.isCorrectAnswerOn.value == false)
             ElevatedButton(
               onPressed: controller.onTapSeeCorrectAnswer,
-              child: const Column(
-                children: [
-                  Icon(Icons.search),
-                  Text('정답보기'),
-                ],
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text('정답\n보기'),
+              ),
+            ),
+          const SizedBox(width: 10),
+          if (controller.isHintOn.value == false)
+            ElevatedButton(
+              onPressed: controller.onTapSeeHint,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text('힌트\n보기'),
               ),
             ),
         ],
@@ -126,7 +122,10 @@ class QuizPage extends GetWidget<QuizController> {
           onPressed: controller.isFirst ? null : controller.onTapBefore,
           child: const Column(
             children: [
-              Icon(Icons.arrow_back_ios),
+              Icon(
+                Icons.arrow_back_ios,
+                size: 48,
+              ),
               Text('이전 문제'),
             ],
           ),
@@ -137,33 +136,43 @@ class QuizPage extends GetWidget<QuizController> {
               onPressed: Get.back,
               child: const Column(
                 children: [
-                  Icon(Icons.home),
+                  Icon(
+                    Icons.home,
+                    size: 48,
+                  ),
                   Text('홈으로'),
                 ],
               ),
             ),
           ],
         ),
-        Column(
-          children: [
-            ElevatedButton(
-              onPressed: controller.isCorrect.value && !controller.isLast
-                  ? controller.onTapNext
-                  : null,
-              child: const Column(
-                children: [
-                  Icon(Icons.arrow_forward_ios),
-                  Text('다음 문제'),
-                ],
-              ),
+        if (controller.isLast)
+          ElevatedButton(
+            onPressed:
+                controller.isCorrect.value ? controller.onTapComplete : null,
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.done_all,
+                  size: 48,
+                ),
+                Text('완료'),
+              ],
             ),
-            if (controller.isLast)
-              ElevatedButton(
-                onPressed: controller.onTapComplete,
-                child: const Text('완료'),
-              ),
-          ],
-        ),
+          )
+        else
+          ElevatedButton(
+            onPressed: controller.isCorrect.value ? controller.onTapNext : null,
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 48,
+                ),
+                Text('다음 문제'),
+              ],
+            ),
+          ),
       ],
     );
   }

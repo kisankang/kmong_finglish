@@ -1,11 +1,8 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/models/quiz_result.dart';
-import 'package:finglish/data/services/quiz_data_service.dart';
 import 'package:finglish/data/services/quiz_play_service.dart';
-import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/routes/app_pages.dart';
 import 'package:finglish/utils/enums.dart';
-import 'package:finglish/utils/extensions.dart';
 import 'package:finglish/widgets/quiz_result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
