@@ -173,6 +173,7 @@ class QuizController extends GetxController {
   quizCardCorrectCallback() {
     isCorrect.value = true;
     audioPlayer.play();
+    audioPlayer.load();
     updateQuizResult();
   }
 }

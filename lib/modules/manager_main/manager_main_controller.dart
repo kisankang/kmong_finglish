@@ -91,8 +91,8 @@ class ManagerMainController extends GetxController {
       } else {
         Get.showSnackbar(
           const GetSnackBar(
-            title: '오류',
-            message: '로드된 파일이 Null입니다',
+            title: '알림',
+            message: '선택된 파일이 없습니다.',
           ),
         );
       }
