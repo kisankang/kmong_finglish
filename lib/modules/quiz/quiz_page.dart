@@ -25,6 +25,7 @@ class QuizPage extends GetWidget<QuizController> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(controller.quizStartType.text),
+          actions: [_renderPageIndicator(), const SizedBox(width: 10)],
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
@@ -34,16 +35,20 @@ class QuizPage extends GetWidget<QuizController> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _renderPageIndicator(),
-                      _renderLikeButton(),
-                      QuizCard(
-                        quiz: controller.currentQuiz,
-                        blankControllerList:
-                            controller.quizPlayService.blankControllerList,
-                        isCheckedHint: controller.isHintOn.value,
-                        isCheckedCorrectAnswer:
-                            controller.isCorrectAnswerOn.value,
-                        correctCallBack: controller.quizCardCorrectCallback,
+                      Stack(
+                        children: [
+                          QuizCard(
+                            quiz: controller.currentQuiz,
+                            blankControllerList:
+                                controller.quizPlayService.blankControllerList,
+                            isCheckedHint: controller.isHintOn.value,
+                            isCheckedCorrectAnswer:
+                                controller.isCorrectAnswerOn.value,
+                            correctCallBack: controller.quizCardCorrectCallback,
+                          ),
+                          Positioned(
+                              bottom: 0, right: 0, child: _renderLikeButton()),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       _renderHelperButton(),
