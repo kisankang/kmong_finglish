@@ -15,6 +15,13 @@ class QuizPlayService extends GetxService {
     required UserDataService userDataService,
   })  : _quizDataService = quizDataService,
         _userDataService = userDataService;
+
+  @override
+  onInit() {
+    super.onInit();
+    quizDatas = _userDataService.readQuizPlayState() ?? {};
+  }
+
   Map<
       QuizStartType,
       ({

@@ -1,8 +1,10 @@
 import 'package:finglish/data/models/app_user.dart';
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/models/quiz_result.dart';
+import 'package:finglish/utils/enums.dart';
 import 'package:finglish/utils/get_stroage_key.dart';
 import 'package:finglish/utils/extensions.dart';
+import 'package:finglish/utils/json_covertor.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -190,5 +192,41 @@ class UserDataService extends GetxService {
 
   eraseAll() async {
     await appUserStorage.erase();
+    await stateStorage.erase();
+  }
+
+  GetStorage? _stateStorage;
+  GetStorage get stateStorage {
+    _stateStorage ??= GetStorage(GetStorageKey.STATE_CONTAINER);
+    return _stateStorage!;
+  }
+
+  writeQuizPlayState(
+      Map<
+              QuizStartType,
+              ({
+                List<QuizResult> quizResultData,
+                List<Quiz> quizData,
+                Rx<int> currentIndex
+              })>
+          state) async {
+    var json = JsonConvertor.quizPlayStateToJson(state);
+
+    await stateStorage.write(GetStorageKey.STATE, json);
+  }
+
+  readQuizPlayState() {
+    var json = stateStorage.read(GetStorageKey.STATE);
+    if (json == null) {
+      return null;
+    }
+    Map<
+        QuizStartType,
+        ({
+          List<QuizResult> quizResultData,
+          List<Quiz> quizData,
+          Rx<int> currentIndex
+        })> state = JsonConvertor.quizPlayStateFromJson(json);
+    return state;
   }
 }

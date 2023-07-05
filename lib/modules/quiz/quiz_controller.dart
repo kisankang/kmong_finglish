@@ -1,6 +1,8 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/models/quiz_result.dart';
+import 'package:finglish/data/services/quiz_data_service.dart';
 import 'package:finglish/data/services/quiz_play_service.dart';
+import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/routes/app_pages.dart';
 import 'package:finglish/utils/enums.dart';
 import 'package:finglish/widgets/quiz_result_card.dart';
@@ -113,7 +115,7 @@ class QuizController extends GetxController {
     }
   }
 
-  updateQuizResult() {
+  updateQuizResult() async {
     if (quizResultIndex == -1) {
       quizResultData.add(QuizResult(
         quiz: currentQuiz,
@@ -127,24 +129,34 @@ class QuizController extends GetxController {
         ],
         isLiked: isLiked.value,
       ));
+
+      await updateState();
     }
+  }
+
+  updateState() async {
+    UserDataService userDataService = Get.find();
+    await userDataService.writeQuizPlayState(quizPlayService.quizDatas);
   }
 
   onTapLikeButton() {
     isLiked.toggle();
     if (quizResultIndex != -1) {
       quizResultData[quizResultIndex].isLiked = isLiked.value;
+      updateState();
     }
   }
 
   onTapBefore() {
     quizPlayService.decreaseCurrentIndex(quizStartType);
+    updateState();
     loadQuizCard();
   }
 
   onTapNext() {
     updateQuizResult();
     quizPlayService.increaseCurrentIndex(quizStartType);
+    updateState();
     loadQuizCard();
   }
 
