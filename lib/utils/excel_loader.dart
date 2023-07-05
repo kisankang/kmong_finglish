@@ -53,60 +53,63 @@ class ExcelHelper {
 
   static Quiz? _convertToQuizData(List<List<Data?>> fourRows,
       {required int quizId}) {
-    if (fourRows.length != 4) {
-      return null;
-    }
-    Quiz quiz;
-    QuizType type;
-    List<String> title = [];
-    List<bool> titleHighLight = [];
-    List<String> kr = [];
-    List<bool> krHighlight = [];
-    List<String> en = [];
-    List<bool> enHighlight = [];
+    Quiz? quiz;
+    try {
+      if (fourRows.length != 4) {
+        return null;
+      }
+      QuizType type;
+      List<String> title = [];
+      List<bool> titleHighLight = [];
+      List<String> kr = [];
+      List<bool> krHighlight = [];
+      List<String> en = [];
+      List<bool> enHighlight = [];
 
-    var typeRaw = (fourRows[0].first?.value as SharedString).node.text;
-    if (typeRaw == QuizType.word.text) {
-      type = QuizType.word;
-    } else if (typeRaw == QuizType.sentence.text) {
-      type = QuizType.sentence;
-    } else {
-      return null;
-    }
+      var typeRaw = (fourRows[0].first?.value as SharedString).node.text;
+      if (typeRaw == QuizType.word.text) {
+        type = QuizType.word;
+      } else if (typeRaw == QuizType.sentence.text) {
+        type = QuizType.sentence;
+      } else {
+        return null;
+      }
 
-    var titleRaw = fourRows[1];
-    for (var element in titleRaw) {
-      var value = (element?.value as SharedString).node.text;
-      var fontColor = element?.cellStyle?.fontColor;
-      title.add(value);
-      titleHighLight.add(!_isBlack(fontColor));
-    }
+      var titleRaw = fourRows[1];
+      for (var element in titleRaw) {
+        var value = (element?.value as SharedString).node.text;
+        var fontColor = element?.cellStyle?.fontColor;
+        title.add(value);
+        titleHighLight.add(!_isBlack(fontColor));
+      }
 
-    var krRaw = fourRows[2];
-    for (var element in krRaw) {
-      var value = (element?.value as SharedString).node.text;
-      var fontColor = element?.cellStyle?.fontColor;
-      kr.add(value);
-      krHighlight.add(!_isBlack(fontColor));
-    }
+      var krRaw = fourRows[2];
+      for (var element in krRaw) {
+        var value = (element?.value as SharedString).node.text;
+        var fontColor = element?.cellStyle?.fontColor;
+        kr.add(value);
+        krHighlight.add(!_isBlack(fontColor));
+      }
 
-    var enRaw = fourRows[3];
-    for (var element in enRaw) {
-      var value = (element?.value as SharedString).node.text;
-      var fontColor = element?.cellStyle?.fontColor;
-      en.add(value);
-      enHighlight.add(!_isBlack(fontColor));
-    }
+      var enRaw = fourRows[3];
+      for (var element in enRaw) {
+        var value = (element?.value as SharedString).node.text;
+        var fontColor = element?.cellStyle?.fontColor;
+        en.add(value);
+        enHighlight.add(!_isBlack(fontColor));
+      }
 
-    quiz = Quiz(
-        quizId: quizId,
-        type: type,
-        title: title,
-        titleHighLight: titleHighLight,
-        kr: kr,
-        krHighlight: krHighlight,
-        en: en,
-        enHighlight: enHighlight);
+      quiz = Quiz(
+          quizId: quizId,
+          type: type,
+          title: title,
+          titleHighLight: titleHighLight,
+          kr: kr,
+          krHighlight: krHighlight,
+          en: en,
+          enHighlight: enHighlight);
+    } catch (e) {}
+
     return quiz;
   }
 

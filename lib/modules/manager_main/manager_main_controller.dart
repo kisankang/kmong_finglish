@@ -52,7 +52,7 @@ class ManagerMainController extends GetxController {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                          '${quizData.length}개의 퀴즈 데이터가 감지되었습니다.\n업로드 하시겠습니까?'),
+                          '총 ${quizData.length}개의 퀴즈 데이터가 감지되었습니다.\n업로드 하시겠습니까?'),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisSize: MainAxisSize.min,
