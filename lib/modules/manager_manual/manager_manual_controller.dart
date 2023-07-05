@@ -5,6 +5,7 @@ import 'package:finglish/utils/app_reg_exp.dart';
 import 'package:finglish/utils/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ManagerManualController extends GetxController {
   final QuizRepository _quizRepository;
@@ -90,11 +91,44 @@ class ManagerManualController extends GetxController {
 
   onTapBack() {
     pageIndex.value--;
+    if (pageIndex.value == 0) {
+      _convertFromQuizToControllerData();
+    }
+  }
+
+  _convertFromQuizToControllerData() {
+    String title = '';
+    for (var i = 0; i < quiz.value.title.length; i++) {
+      if (i != 0) {
+        title = '$title ';
+      }
+      title = title + quiz.value.title[i];
+    }
+    String kr = '';
+    for (var i = 0; i < quiz.value.kr.length; i++) {
+      if (i != 0) {
+        kr = '$kr ';
+      }
+      kr = kr + quiz.value.kr[i];
+    }
+    String en = '';
+    for (var i = 0; i < quiz.value.en.length; i++) {
+      if (i != 0) {
+        en = '$en ';
+      }
+      en = en + quiz.value.en[i];
+    }
+
+    titleEditingController.text = title;
+    krEditingController.text = kr;
+    enEditingController.text = en;
   }
 
   _createQuestionData() {
     quiz.update((val) {
-      val?.quizId = DateTime.now().millisecondsSinceEpoch;
+      if (isEditMode == null) {
+        val?.quizId = DateTime.now().millisecondsSinceEpoch;
+      }
       val?.title = titleEditingController.text.split(AppRegExp.space);
       val?.titleHighLight = List.generate(val.title.length, (index) => false);
       val?.kr = krEditingController.text.split(AppRegExp.space);

@@ -23,9 +23,10 @@ class ManagerManualPage extends GetWidget<ManagerManualController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Visibility(
-                    visible: controller.pageIndex.value != 0 &&
-                        !(controller.pageIndex.value == 1 &&
-                            controller.isEditMode != null),
+                    visible: controller.pageIndex.value != 0,
+                    //  &&
+                    //     !(controller.pageIndex.value == 1 &&
+                    //         controller.isEditMode != null),
                     child: OutlinedButton(
                       onPressed: controller.onTapBack,
                       child: const Text('뒤로'),
