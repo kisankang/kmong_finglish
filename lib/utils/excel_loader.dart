@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:finglish/data/models/quiz.dart';
+import 'package:flutter_excel/excel.dart';
 import 'package:get/get.dart';
 
 class ExcelHelper {
@@ -66,7 +66,7 @@ class ExcelHelper {
       List<String> en = [];
       List<bool> enHighlight = [];
 
-      var typeRaw = (fourRows[0].first?.value as SharedString).node.text;
+      var typeRaw = (fourRows[0].first?.value);
       if (typeRaw == QuizType.word.text) {
         type = QuizType.word;
       } else if (typeRaw == QuizType.sentence.text) {
@@ -77,7 +77,7 @@ class ExcelHelper {
 
       var titleRaw = fourRows[1];
       for (var element in titleRaw) {
-        var value = (element?.value as SharedString).node.text;
+        var value = element?.value;
         var fontColor = element?.cellStyle?.fontColor;
         title.add(value);
         titleHighLight.add(!_isBlack(fontColor));
@@ -85,7 +85,7 @@ class ExcelHelper {
 
       var krRaw = fourRows[2];
       for (var element in krRaw) {
-        var value = (element?.value as SharedString).node.text;
+        var value = element?.value;
         var fontColor = element?.cellStyle?.fontColor;
         kr.add(value);
         krHighlight.add(!_isBlack(fontColor));
@@ -93,7 +93,7 @@ class ExcelHelper {
 
       var enRaw = fourRows[3];
       for (var element in enRaw) {
-        var value = (element?.value as SharedString).node.text;
+        var value = element?.value;
         var fontColor = element?.cellStyle?.fontColor;
         en.add(value);
         enHighlight.add(!_isBlack(fontColor));

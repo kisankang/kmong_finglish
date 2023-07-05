@@ -1,4 +1,3 @@
-import 'package:excel/excel.dart';
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/repositories/quiz_repository.dart';
 import 'package:finglish/data/services/quiz_data_service.dart';
@@ -7,6 +6,7 @@ import 'package:finglish/routes/app_pages.dart';
 import 'package:finglish/utils/excel_loader.dart';
 import 'package:finglish/utils/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_excel/excel.dart';
 import 'package:get/get.dart';
 
 class ManagerMainController extends GetxController {
