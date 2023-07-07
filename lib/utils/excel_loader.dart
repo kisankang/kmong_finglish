@@ -11,9 +11,9 @@ class ExcelHelper {
 
     try {
       File? file;
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        file = File(result.files.single.path!);
+      FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
+      if (pickedFile != null) {
+        file = File(pickedFile.files.single.path!);
       } else {
         // User canceled the picker
       }

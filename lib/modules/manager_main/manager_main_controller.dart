@@ -66,6 +66,8 @@ class ManagerMainController extends GetxController {
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () async {
+                              Get.back();
+
                               Loading.onWithProgress();
                               QuizRepository _quizRepository = Get.find();
                               for (var i = 0; i < quizData.length; i++) {
@@ -75,7 +77,6 @@ class ManagerMainController extends GetxController {
                                 await _quizRepository.createQuiz(quizData[i]);
                               }
                               Loading.off();
-                              Get.back();
                             },
                             child: const Text('확인'),
                           ),
