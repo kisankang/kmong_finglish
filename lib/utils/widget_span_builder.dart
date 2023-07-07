@@ -26,6 +26,7 @@ class WidgetSpanBuilder {
   static WidgetSpan blankBuilder({
     required String text,
     required TextEditingController blankEditingController,
+    FocusNode? focusNode,
     required double fontSize,
     required bool isLastBlank,
     required Function()? correctCallback,
@@ -51,6 +52,7 @@ class WidgetSpanBuilder {
             return SizedBox(
               width: blankWidth,
               child: TextFormField(
+                focusNode: focusNode,
                 readOnly: isDisabled,
                 style: TextStyle(
                   fontSize: fontSize,

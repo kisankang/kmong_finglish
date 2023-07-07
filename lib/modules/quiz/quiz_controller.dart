@@ -1,6 +1,5 @@
 import 'package:finglish/data/models/quiz.dart';
 import 'package:finglish/data/models/quiz_result.dart';
-import 'package:finglish/data/services/quiz_data_service.dart';
 import 'package:finglish/data/services/quiz_play_service.dart';
 import 'package:finglish/data/services/user_data_service.dart';
 import 'package:finglish/routes/app_pages.dart';
@@ -84,6 +83,7 @@ class QuizController extends GetxController {
   }
 
   onTapSeeCorrectAnswer() {
+    Get.focusScope?.unfocus();
     isHintOn.value = true;
     isCorrectAnswerOn.value = true;
     for (var i = 0; i < quizPlayService.blankControllerList.length; i++) {
@@ -94,6 +94,8 @@ class QuizController extends GetxController {
     isCorrect.value = true;
     updateQuizResult();
   }
+
+  FocusNode firstBlankFocusNode = FocusNode();
 
   @override
   onInit() {
@@ -156,8 +158,12 @@ class QuizController extends GetxController {
   onTapNext() {
     updateQuizResult();
     quizPlayService.increaseCurrentIndex(quizStartType);
-    updateState();
     loadQuizCard();
+    updateState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      update();
+      firstBlankFocusNode.requestFocus();
+    });
   }
 
   onTapComplete() {

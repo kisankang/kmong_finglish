@@ -45,6 +45,7 @@ class QuizPage extends GetWidget<QuizController> {
                             isCheckedCorrectAnswer:
                                 controller.isCorrectAnswerOn.value,
                             correctCallBack: controller.quizCardCorrectCallback,
+                            firsBlankFocusNode: controller.firstBlankFocusNode,
                           ),
                           Positioned(
                               bottom: 0, right: 0, child: _renderLikeButton()),

@@ -5,7 +5,6 @@ import 'package:finglish/utils/app_reg_exp.dart';
 import 'package:finglish/utils/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ManagerManualController extends GetxController {
   final QuizRepository _quizRepository;

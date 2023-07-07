@@ -9,6 +9,7 @@ class QuizCard extends StatefulWidget {
   final bool? isCheckedCorrectAnswer;
   final List<TextEditingController?>? blankControllerList;
   final Function()? correctCallBack;
+  final FocusNode? firsBlankFocusNode;
   const QuizCard({
     super.key,
     required this.quiz,
@@ -16,6 +17,7 @@ class QuizCard extends StatefulWidget {
     this.isCheckedCorrectAnswer,
     this.blankControllerList,
     this.correctCallBack,
+    this.firsBlankFocusNode,
   });
 
   @override
@@ -23,6 +25,15 @@ class QuizCard extends StatefulWidget {
 }
 
 class _QuizCardState extends State<QuizCard> {
+  FocusNode? get firstBlankFocus => widget.firsBlankFocusNode;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    firstBlankFocus?.requestFocus();
+  }
+
   final double radius = 18;
 
   List<bool?> get isCorrect {
@@ -66,6 +77,21 @@ class _QuizCardState extends State<QuizCard> {
     return result;
   }
 
+  bool isFirstBlank(int index) {
+    bool result = true;
+    if (widget.blankControllerList == null) {
+      return false;
+    }
+    for (var i = 0; i < index; i++) {
+      if (widget.blankControllerList![i] != null) {
+        result = false;
+        break;
+      }
+    }
+
+    return result;
+  }
+
   quizDataBuilder({
     required List<String> textList,
     required List<bool> highightList,
@@ -83,6 +109,7 @@ class _QuizCardState extends State<QuizCard> {
             blankEditingController: putController(text, index),
             fontSize: fontSize,
             isLastBlank: isLastBlank(index),
+            focusNode: isFirstBlank(index) ? firstBlankFocus : null,
             correctCallback: () {
               if (widget.correctCallBack != null && isAllCorrect) {
                 widget.correctCallBack!();
