@@ -57,7 +57,10 @@ class QuizPage extends GetWidget<QuizController> {
                   ),
                 ),
               ),
-              _renderNavigationButton()
+              Visibility(
+                visible: MediaQuery.of(context).viewInsets.bottom == 0,
+                child: _renderNavigationButton(),
+              )
             ],
           ),
         ),
