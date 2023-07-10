@@ -22,9 +22,6 @@ class QuizController extends GetxController {
   // _quizDataService = quizDataService,
   //       _userDataService = userDataService,
 
-  int get quizResultIndex => quizResultData
-      .indexWhere((element) => currentQuiz.quizId == element.quiz.quizId);
-
   loadQuizCard() {
     List<TextEditingController?> blankControllers = [];
     for (var element in currentQuiz.enHighlight) {
@@ -44,16 +41,18 @@ class QuizController extends GetxController {
           quizPlayService.blankControllerList[i]?.text = triedQuiz.quiz.en[i];
         }
       }
+    } else if (quizResultIndexFromLocalDB != -1) {
+      QuizResult triedQuiz =
+          quizResultDataFromLocaDB[quizResultIndexFromLocalDB];
+      isCorrect.value = false;
+      isLiked.value = triedQuiz.isLiked;
+      isHintOn.value = false;
+      isCorrectAnswerOn.value = false;
     } else {
       isCorrect.value = false;
       isLiked.value = false;
       isHintOn.value = false;
       isCorrectAnswerOn.value = false;
-      if (quizStartType == QuizStartType.important ||
-          quizStartType == QuizStartType.importantWord ||
-          quizStartType == QuizStartType.importantSentence) {
-        isLiked.value = true;
-      }
     }
   }
 
@@ -65,6 +64,16 @@ class QuizController extends GetxController {
   Quiz get currentQuiz => quizPlayService.currentQuiz(quizStartType);
   List<QuizResult> get quizResultData =>
       quizPlayService.getQuizResultData(quizStartType);
+  int get quizResultIndex => quizResultData
+      .indexWhere((element) => currentQuiz.quizId == element.quiz.quizId);
+
+  List<QuizResult> get quizResultDataFromLocaDB {
+    UserDataService userDataService = Get.find();
+    return userDataService.appUser.quizResult;
+  }
+
+  int get quizResultIndexFromLocalDB => quizResultDataFromLocaDB
+      .indexWhere((element) => currentQuiz.quizId == element.quiz.quizId);
 
   // List<TextEditingController?> _quizPlayService.blankControllerList = [];
   Rx<bool> isCorrect = false.obs;
